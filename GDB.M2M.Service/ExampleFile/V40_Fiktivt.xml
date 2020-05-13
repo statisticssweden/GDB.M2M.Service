@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ReportingAgentName="Rapportören" ReportingAgentCode="9990000045" FileCreated="1900-01-01T01:01:01+01:00" ReferencePeriod="2017-09-30" xmlns="http://scb.se/gdb/vinn">
+  <Holder>
+    <HolderName>Fiktivt</HolderName>
+    <FIIdentificationNumber>12345</FIIdentificationNumber>
+    <HolderCountry>SE</HolderCountry>
+    <Holding>
+      <IdentifierType>ISIN</IdentifierType>
+      <Identifier>Idenfifikator1</Identifier>
+      <NominalCurrency>SEK</NominalCurrency>
+      <ReportingBasis>XXX</ReportingBasis>
+      <Observation>123456789012345</Observation>
+      <EntityWithinTheGroup>Y_1</EntityWithinTheGroup>
+      <Valuation>M</Valuation>
+      <Value>123456789012345</Value>
+      <ValuationCurrency>ADF</ValuationCurrency>
+      <AccruedInterestForMarketValues>true</AccruedInterestForMarketValues>
+      <AccruedInterest>123456789012345</AccruedInterest>
+    </Holding>
+   </Holder>
+  </Report>
