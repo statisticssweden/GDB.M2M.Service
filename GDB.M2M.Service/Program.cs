@@ -19,7 +19,7 @@ namespace GDB.M2M.Service
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    Console.WriteLine($"Enviroment is: {hostContext.HostingEnvironment.EnvironmentName}.");
+                    Console.WriteLine($"Environment is: {hostContext.HostingEnvironment.EnvironmentName}.");
 
                     services.AddTransient<IFileInfoFactory, FileInfoFactory>();
                     services.AddTransient<IFileWatcher, FileWatcher>();
@@ -47,6 +47,8 @@ namespace GDB.M2M.Service
                                     var handler = new HttpClientHandler();
                                     handler.ClientCertificates.Add(certificate);
                                     handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                                    handler.ServerCertificateCustomValidationCallback =
+                                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
                                     return handler;
                                 }
                             )
