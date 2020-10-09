@@ -47,8 +47,12 @@ namespace GDB.M2M.Service
                                     var handler = new HttpClientHandler();
                                     handler.ClientCertificates.Add(certificate);
                                     handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-                                    handler.ServerCertificateCustomValidationCallback =
-                                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+
+                                    // For testing POST on non-SSL. It can be useful if doing local proxy-testing.
+                                    // However, remember to always use proper certificate validation in production environment!
+                                    //
+                                    //handler.ServerCertificateCustomValidationCallback =
+                                    //    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
                                     return handler;
                                 }
                             )
