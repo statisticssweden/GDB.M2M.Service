@@ -32,8 +32,8 @@ All necessary configurations should be applied to `app.config`, mainly the `requ
 * __DoneDirectory__ - Sent files will be placed here after a successful post
 * __CertificateSerialNumber__ - Serial number for the installed certificate. Note that the application will try to fetch the certificate as the user running the application. Currently as `new X509Store(StoreName.My, StoreLocation.CurrentUser)`. It's convenient when testing, but probably not suitable for production.
 * __BaseUrl__ - Url for GDB M2M-api. Probably one of these:
- https://test.m2m.gdb.se/m2m/v1
-http://m2m.gdb.se/m2m/v1
+ https://test.m2m.gdb.scb.se/m2m/v1
+https://m2m.gdb.scb.se/m2m/v1
 * __PingInterval__ - Used when you want to ping the api on a regular basis. Convenient when testing, but probably not suitable for production.
 * __OrganisationNumber__ - Swedish Organisationnummer for the reportee. Eg. 9990000045. Not needed when using directory structure.
 * __StatisticalProgram__ - Statististical program (Sv. undersökning). Either _VINN_ or _KRITA_. Not needed when using directory structure.
