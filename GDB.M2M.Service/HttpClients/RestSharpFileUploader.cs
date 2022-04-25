@@ -59,6 +59,7 @@ namespace GDB.M2M.Service.HttpClients
 
             var url = client.BuildUri(request);
             _logger.LogInformation($"Posting file to: {url}");
+            request.AddHeader("Content-Type", "multipart/mixed");
             var response = await client.ExecutePostAsync<FileUploadResponse>(request);
 
             if (response.StatusCode == HttpStatusCode.OK && response.Data != null)
