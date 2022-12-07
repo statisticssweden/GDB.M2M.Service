@@ -39,7 +39,7 @@ https://m2m.gdb.scb.se/m2m/v1
 * __StatisticalProgram__ - Statististical program (Sv. undersökning). Either _VINN_ or _KRITA_. Not needed when using directory structure.
 * __FileFormat__ - Type of form. Eg V40, V10, KRITA_MONTHLY. Not needed when using directory structure.
 * __Version__ - Version of the form. Eg 1, 3, 5. Usually not needed at all, but the API supports it.
-* __Referenceperiod__ - The referenceperiod (month) the file represent.
+* __Referenceperiod__ - The referenceperiod (month) the file represent. Not needed when using directory structure.
 
 # Build and Test
 Currently tests are not included in distributed solution.
