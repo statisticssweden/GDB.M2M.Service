@@ -17,9 +17,9 @@ The application is pretty simple. Point out your read directory and run the appl
 7. The application will send the file.
 
 # Directory structure
-The application is built to run on one server, but support differerent reportees/information providers. This is solved by using a strict directory structure to define which information provider the file belongs to. The structure is defined as such: `[read-diretory]\[organisationsnummer]\[fileformat]`
+The application is built to run on one server, but support differerent reportees/information providers. This is solved by using a strict directory structure to define which information provider the file belongs to. The structure is defined as such: `[read-diretory]\[organisationsnummer]\[referenceperiod]\[fileformat]`
 
-In reality it could translate to this: `C:\Temp\999000-0045\V40`
+In reality it could translate to this: `C:\Temp\999000-0045\2022-06-30\V40`
 
 When running the application and you put a file in the directory above it will send the file as `999000-0045` and define the fileformat as `V40`. If you put the file in `C:\Temp` it will use the values in app.config instead.
 
@@ -36,9 +36,10 @@ All necessary configurations should be applied to `app.config`, mainly the `requ
 https://m2m.gdb.scb.se/m2m/v1
 * __PingInterval__ - Used when you want to ping the api on a regular basis. Convenient when testing, but probably not suitable for production.
 * __OrganisationNumber__ - Swedish Organisationnummer for the reportee. Eg. 9990000045. Not needed when using directory structure.
-* __StatisticalProgram__ - Statististical program (Sv. undersökning). Either _VINN_ or _KRITA_. Not needed when using directory structure.
+* __StatisticalProgram__ - Statististical program (Sv. undersÃ¶kning). Either _VINN_ or _KRITA_. Not needed when using directory structure.
 * __FileFormat__ - Type of form. Eg V40, V10, KRITA_MONTHLY. Not needed when using directory structure.
 * __Version__ - Version of the form. Eg 1, 3, 5. Usually not needed at all, but the API supports it.
+* __Referenceperiod__ - The referenceperiod (month) the file represent.
 
 # Build and Test
 Currently tests are not included in distributed solution.
