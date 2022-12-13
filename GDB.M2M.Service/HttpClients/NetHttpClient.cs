@@ -43,7 +43,9 @@ namespace GDB.M2M.Service.HttpClients
             var resource = _config.FileUploadResource
                 .Replace("{organisationNumber}", requestInfo.OrganizationNumber)
                 .Replace("{statisticalProgram}", requestInfo.StatisticalProgram)
+                .Replace("{referencePeriod}", requestInfo.ReferencePeriod)
                 .Replace("{fileFormat}", requestInfo.FileFormat)
+                .Replace("{fileName}", requestInfo.FileName)
                 .Replace("{version}", requestInfo.Version ?? string.Empty);
             return new Uri(resource, UriKind.Relative);
         }
@@ -66,28 +68,18 @@ namespace GDB.M2M.Service.HttpClients
                 byte[] data = new byte[stream.Length];
                 stream.Read(data, 0, (int)stream.Length);
 
-                ByteArrayContent bytes = new ByteArrayContent(data);
-
+                ByteArrayContent bytes = new ByteArrayContent(data);      
                 var resource = GetResourceUri(requestInfo);
-
                 _logger.LogDebug($"Will POST file to {client.BaseAddress}/{resource}.");
 
-                // Set boundary manually.
-                var boundary = Guid.NewGuid().ToString();
-                MultipartFormDataContent multiContent = new MultipartFormDataContent(boundary);
-                multiContent.Add(bytes, "file", requestInfo.FileName);
-
-
-                // HttpClient adds double qoutes (") to the boundary, which is not supported by the server. Therefore we remove them.
-                multiContent.Headers.Remove("Content-Type");
-                multiContent.Headers.TryAddWithoutValidation("Content-Type", "multipart/mixed; boundary=" + boundary);
+                var multiContent = new MultipartFormDataContent();                
+                multiContent.Add(bytes, "File", requestInfo.FileName);
 
                 var response = await client.PostAsync(resource, multiContent);
                 var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
                 });
-
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -98,7 +90,6 @@ namespace GDB.M2M.Service.HttpClients
                 _logger.LogError("POST failed.");
                 return false;
             }
-
         }
     }
 }
