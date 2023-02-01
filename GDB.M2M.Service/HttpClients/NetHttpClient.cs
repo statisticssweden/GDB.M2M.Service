@@ -55,6 +55,7 @@ namespace GDB.M2M.Service.HttpClients
             // We will create a new client every time to make sure that do not re-use any session cookies.
             using (var client = _clientFactory.CreateClient(nameof(NetHttpClient)))
             {
+                client.Timeout = new TimeSpan(0, 30, 0);
                 var pingResponse = await client.GetAsync(_config.PingResource);
                 if (!pingResponse.IsSuccessStatusCode)
                 {
@@ -74,6 +75,8 @@ namespace GDB.M2M.Service.HttpClients
 
                 var multiContent = new MultipartFormDataContent();                
                 multiContent.Add(bytes, "File", requestInfo.FileName);
+
+               
 
                 var response = await client.PostAsync(resource, multiContent);
                 var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
