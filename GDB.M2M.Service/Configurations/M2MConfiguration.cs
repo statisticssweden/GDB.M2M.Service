@@ -16,12 +16,12 @@
         /// The resource-path for uploading files. The part after the domain. Use string interpolation.
         /// </summary>
         public string FileUploadResource { get; set; } =
-            @"file/{organisationNumber}/{statisticalProgram}/{fileFormat}/{version}";
+            @"file/{organisationNumber}/{statisticalProgram}/{referencePeriod}/{fileFormat}/{fileName}/{version}";
 
         /// <summary>
         /// The resource-path for heartbeat. The part after the domain.
         /// </summary>
-        
+
         public string PingResource { get; set; } = "heartbeat";
 
         /// <summary>
@@ -49,6 +49,11 @@
         /// Version of the FileFormat.
         /// </summary>
         public string Version { get; set; }
+
+        /// <summary>
+        /// The reference period of the file
+        /// </summary>
+        public string ReferencePeriod { get; set; }
 
         /// <summary>
         /// The directory where the files will be dropped.
