@@ -41,5 +41,17 @@ https://m2m.gdb.scb.se/m2m/v1
 * __Version__ - Version of the form. Eg 1, 3, 5. Usually not needed at all, but the API supports it.
 * __Referenceperiod__ - The referenceperiod (month) the file represent. Not needed when using directory structure.
 
+#APIs
+Below are the following APIs and URLs which are used:
+
+* __Test__ https://test.m2m.gdb.scb.se/m2m/v1
+* __Production__ https://m2m.gdb.scb.se/m2m/v1
+* __EndPoint Test__ https://test.m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
+					https://test.m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
+* __EndPoint Production__ https://m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
+						https://m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
+
+You can chose which enpoint you want to use between the two (containing {file} or not) and {version?} is optimal in both. All the above endpoints work in the same way. 
+
 # Build and Test
 Currently tests are not included in distributed solution.
