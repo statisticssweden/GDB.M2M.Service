@@ -48,10 +48,12 @@ Below are the following APIs and URLs which are used:
 * __Production__ https://m2m.gdb.scb.se/m2m/v1
 * __EndPoint Test__ https://test.m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
 					https://test.m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
-* __EndPoint Production__ https://m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
-						https://m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
+* __EndPoint Production__ https://m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{fileFormat}/{version?} 
+						https://m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{fileFormat}/{version?} 
 
 You can chose which enpoint you want to use between the two (containing {file} or not) and {version?} is optimal in both. All the above endpoints work in the same way. 
+
+Please note that we currently only support the ContentType: __multipart/form-data__ in the http request.
 
 # Build and Test
 Currently tests are not included in distributed solution.
