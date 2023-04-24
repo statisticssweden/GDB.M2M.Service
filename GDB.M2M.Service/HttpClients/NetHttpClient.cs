@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web;
 using GDB.M2M.Service.Configurations;
 using GDB.M2M.Service.Models;
 using Microsoft.Extensions.Logging;
