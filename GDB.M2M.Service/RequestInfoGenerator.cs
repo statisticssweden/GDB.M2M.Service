@@ -32,12 +32,12 @@ namespace GDB.M2M.Service
             // If we got 3 levels beneath the root we will be able to generate all the necessary info from the directory path.
             var actualPathCount = fullPath.Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries).Length;
             var rootCount = _config.ReadDirectory.Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries).Length;
-            if (actualPathCount == rootCount + 4) // Since we got the file itself we will have 4 extra entries.
+            if (actualPathCount == rootCount + 5) // Since we got the file itself we will have 5 extra entries.
             {
                 return GenerateWithoutVersion(fullPath);
             }
 
-            if (actualPathCount == rootCount + 5) // 5 entries means that we got a version as well.
+            if (actualPathCount == rootCount + 6) // 6 entries means that we got a version as well.
             {
                 return GenerateWithVersion(fullPath);
             }
@@ -49,7 +49,8 @@ namespace GDB.M2M.Service
                 StatisticalProgram = _config.StatisticalProgram,
                 OrganizationNumber = _config.OrganisationNumber,
                 FullPath = fullPath,
-                FileName = Path.GetFileName(fullPath)
+                FileName = Path.GetFileName(fullPath),
+                ReferencePeriod = _config.ReferencePeriod
             };
         }
 
@@ -58,7 +59,8 @@ namespace GDB.M2M.Service
             IFileInfo fileInfo = _infoFactory.Create(filePath);
             IDirectoryInfo version = fileInfo.Directory();
             IDirectoryInfo fileFormat = version.Parent();
-            IDirectoryInfo statisticalProgram = fileFormat.Parent();
+            IDirectoryInfo referencePeriod = fileFormat.Parent();
+            IDirectoryInfo statisticalProgram = referencePeriod.Parent();
             IDirectoryInfo organizationNumber = statisticalProgram.Parent();
             return new RequestInfoEventArgs
             {
@@ -67,7 +69,8 @@ namespace GDB.M2M.Service
                 OrganizationNumber = organizationNumber.Name,
                 Version = version.Name,
                 FullPath = filePath,
-                FileName = Path.GetFileName(filePath)
+                FileName = Path.GetFileName(filePath),
+                ReferencePeriod = referencePeriod.Name
             };
         }
 
@@ -75,15 +78,18 @@ namespace GDB.M2M.Service
         {
             IFileInfo fileInfo = _infoFactory.Create(filePath);
             IDirectoryInfo fileFormat = fileInfo.Directory();
-            IDirectoryInfo statisticalProgram = fileFormat.Parent();
+            IDirectoryInfo referencePeriod = fileFormat.Parent();
+            IDirectoryInfo statisticalProgram = referencePeriod.Parent();
             IDirectoryInfo organizationNumber = statisticalProgram.Parent();
+
             return new RequestInfoEventArgs
             {
                 FileFormat = fileFormat.Name,
                 StatisticalProgram = statisticalProgram.Name,
                 OrganizationNumber = organizationNumber.Name,
                 FullPath = filePath,
-                FileName = Path.GetFileName(filePath)
+                FileName = Path.GetFileName(filePath),
+                ReferencePeriod = referencePeriod.Name
             };
         }
     }

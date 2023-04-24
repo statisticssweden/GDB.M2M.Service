@@ -122,15 +122,17 @@ namespace GDB.M2M.Service.HttpClients
                 Resource = _config.FileUploadResource,
                 Method = Method.POST
             };
-            request.AddUrlSegment("statisticalProgram", requestInfo.StatisticalProgram);
-            request.AddUrlSegment("fileFormat", requestInfo.FileFormat);
             request.AddUrlSegment("organisationNumber", requestInfo.OrganizationNumber);
+            request.AddUrlSegment("statisticalProgram", requestInfo.StatisticalProgram);
+            request.AddUrlSegment("referencePeriod", requestInfo.ReferencePeriod);
+            request.AddUrlSegment("fileFormat", requestInfo.FileFormat);
+            request.AddUrlSegment("fileName", requestInfo.FileName);
             request.AddUrlSegment("version", requestInfo.Version ?? string.Empty);
 
             byte[] data = new byte[stream.Length];
             stream.Read(data, 0, (int)stream.Length);
 
-            request.AddFile("file", data, requestInfo.FileName, "attachment");
+            request.AddFileBytes("file", data, requestInfo.FileName, "application/xml");
             return request;
         }
 
