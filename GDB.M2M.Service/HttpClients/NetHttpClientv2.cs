@@ -139,27 +139,28 @@ namespace GDB.M2M.Service.HttpClients
 
         private async Task<bool> FinalizeUpload(HttpClient client, RequestInfoEventArgs requestInfo, FileInfo file, string boundary)
         {
-            var chunk = new byte[0];
-            MultipartFormDataContent multiContent = new MultipartFormDataContent(boundary);
+            //var chunk = new byte[0];
+            //MultipartFormDataContent multiContent = new MultipartFormDataContent(boundary);
 
             // Use application/x-www-form-urlencoded instead - skip the empty chunk
 
-            var fileContent = new StreamContent(new MemoryStream(chunk)); // TODO: change to not use multicontent just do a call to finalize chunked file transfer
-            multiContent.Add(fileContent, "file", file.Name);
+            //var fileContent = new StreamContent(new MemoryStream(chunk)); //
+            //multiContent.Add(fileContent, "file", file.Name);
 
-            // HttpClient adds double qoutes (") to the boundary, which is not supported by the server. Therefore we remove them. TODO: Check if this is also true for not multicontent message.
-            multiContent.Headers.Remove("Content-Type");
-            multiContent.Headers.TryAddWithoutValidation("Content-Type", "multipart/mixed; boundary=" + boundary);
+            // HttpClient adds double qoutes (") to the boundary, which is not supported by the server. Therefore we remove them.
+            //multiContent.Headers.Remove("Content-Type");
+            //multiContent.Headers.TryAddWithoutValidation("Content-Type", "multipart/mixed; boundary=" + boundary);
 
-            var resource = GetResourceUriFinalize(client.BaseAddress.ToString(), requestInfo, "2021-01-31", file.Name);
+            var resource = GetResourceUriFinalize(requestInfo);
             _logger.LogInformation($"Posting finalize file transfer to: {resource}");
 
             //var response = await client.PostAsync(resource, multiContent);
             var response = await client.GetAsync(resource);
+
             _logger.LogInformation($"Finalize upload response status code {response.StatusCode}");
             _logger.LogInformation($"Response content: {response.Content}");
 
-            // Exception TODO: reinstate 
+            // Do or not
             var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true

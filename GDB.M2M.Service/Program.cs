@@ -30,8 +30,8 @@ namespace GDB.M2M.Service
                     // You can either use RestSharp or .NET built in HttpClient.
                     // If you want to use RestSharp
                     bool useRestSharp = false;
-                    bool useHttpClientV1 = false;
-                    bool useHttpClientV2 = true;
+                    bool useHttpClientV1 = true;
+                    bool useHttpClientV2 = false;
 
                     if (useRestSharp)
                     {
