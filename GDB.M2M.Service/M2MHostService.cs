@@ -56,7 +56,8 @@ namespace GDB.M2M.Service
 		        using (var stream = File.OpenRead(requestInfoEventArgs.FullPath))
 		        {
                     _logger.LogInformation($"Will post \"{requestInfoEventArgs.FullPath}\" using: \n- StatisticalProgram:{requestInfoEventArgs.StatisticalProgram}\n- OrganizationNumber:{requestInfoEventArgs.OrganizationNumber}\n- FileFormat:{requestInfoEventArgs.FileFormat}");
-			        success = await _fileUploader.PostFileAsync(requestInfoEventArgs, stream);
+			        //success = await _fileUploader.PostFileAsync(requestInfoEventArgs, stream);
+                    success = await _fileUploader.PostFileAsync(requestInfoEventArgs, stream);
                 }
                 
                 // Move file on success.

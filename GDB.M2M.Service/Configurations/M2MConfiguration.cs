@@ -19,9 +19,21 @@
             @"file/{organisationNumber}/{statisticalProgram}/{referencePeriod}/{fileFormat}/{fileName}/{version}";
 
         /// <summary>
+        /// The resource path for uploading file in chunks. The part after the domain. Use string interpolation.
+        /// </summary>
+        public string FileUploadResource_v2_Chunk { get; set; } =
+            @"{segment}/{organisationNumber}/{statisticalProgram}/{referencePeriod}/{fileFormat}/{fileName}/{version}";
+
+        /// <summary>
+        /// The resource path for sending a chunk uploaded file to delivery.
+        /// The part after the domain. Use string interpolation.
+        /// </summary>
+        public string FileUploadResource_v2_Deliver { get; set; } =
+            @"{organisationNumber}/{statisticalProgram}/{fileFormat}/{referencePeriod}/{fileName}/{version}";
+ 
+        /// <summary>
         /// The resource-path for heartbeat. The part after the domain.
         /// </summary>
-
         public string PingResource { get; set; } = "heartbeat";
 
         /// <summary>

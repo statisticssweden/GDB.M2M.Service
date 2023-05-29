@@ -30,15 +30,15 @@ namespace GDB.M2M.Service
                     // You can either use RestSharp or .NET built in HttpClient.
                     // If you want to use RestSharp
                     bool useRestSharp = false;
+                    bool useHttpClientV1 = false;
+                    bool useHttpClientV2 = true;
 
                     if (useRestSharp)
                     {
                         services.AddTransient<IM2MHttpClient, RestSharpFileUploader>();
                     }
-                    else
+                    else if (useHttpClientV1)
                     {
-                        services.AddTransient<IM2MHttpClient, NetHttpClient>();
-
                         services.AddHttpClient(nameof(NetHttpClient))
                             .ConfigurePrimaryHttpMessageHandler(provider =>
                                 {
@@ -61,6 +61,37 @@ namespace GDB.M2M.Service
                                 var options = sp.GetRequiredService<IOptions<M2MConfiguration>>().Value;
                                 httpClient.BaseAddress = new Uri(options.BaseUrl);
                             });
+                    }
+                    else if (useHttpClientV2)
+                    {
+                        services.AddTransient<IM2MHttpClient, NetHttpClientv2>();
+
+                        services.AddHttpClient(nameof(NetHttpClientv2))
+                            .ConfigurePrimaryHttpMessageHandler(provider =>
+                                {
+                                    var certificateStore = provider.GetRequiredService<ICertificateStore>();
+                                    var certificate = certificateStore.GetCertificate();
+                                    var handler = new HttpClientHandler();
+                                    handler.ClientCertificates.Add(certificate);
+                                    handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+
+                                    // For testing POST on non-SSL. It can be useful if doing local proxy-testing.
+                                    // However, remember to always use proper certificate validation in production environment!
+                                    //
+                                    //handler.ServerCertificateCustomValidationCallback =
+                                    //    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                                    return handler;
+                                }
+                            )
+                            .ConfigureHttpClient((sp, httpClient) =>
+                            {
+                                var options = sp.GetRequiredService<IOptions<M2MConfiguration>>().Value;
+                                httpClient.BaseAddress = new Uri(options.BaseUrl);
+                            });
+                    }
+                    else
+                    {
+                        System.Diagnostics.Trace.WriteLine("CreateHostBuilder: You need to select a client.");
                     }
 
                     services.Configure<M2MConfiguration>(hostContext.Configuration.GetSection("requestConfiguration"));
