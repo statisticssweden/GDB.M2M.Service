@@ -15,8 +15,7 @@ namespace GDB.M2M.Service.HttpClients
         /// <param name="stream">FileStream</param>
         /// <returns></returns>
         Task<bool> PostFileAsync(RequestInfoEventArgs requestInfo, Stream stream);
-        
-        
+
         /// <summary>
         /// Makes a request to the Heartbeat-endpoint
         /// </summary>

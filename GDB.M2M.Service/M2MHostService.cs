@@ -27,7 +27,7 @@ namespace GDB.M2M.Service
             _fileUploader = fileUploader;
             _logger = logger;
 
-            // We create a timer which will check for a hearbeat (ping) from server at a given interval.
+            // We create a timer which will check for a heartbeat (ping) from server at a given interval.
             _timer = new System.Timers.Timer(_requestConfiguration.PingInterval);
         }
 
@@ -56,9 +56,11 @@ namespace GDB.M2M.Service
 		        using (var stream = File.OpenRead(requestInfoEventArgs.FullPath))
 		        {
                     _logger.LogInformation($"Will post \"{requestInfoEventArgs.FullPath}\" using: \n- StatisticalProgram:{requestInfoEventArgs.StatisticalProgram}\n- OrganizationNumber:{requestInfoEventArgs.OrganizationNumber}\n- FileFormat:{requestInfoEventArgs.FileFormat}");
-			        success = await _fileUploader.PostFileAsync(requestInfoEventArgs, stream);
+                    success = await _fileUploader.PostFileAsync(requestInfoEventArgs, stream);
+                    // TODO: check if we need to handle different results from the chunked file upload
+                    //success = await _fileUploader.PostFileChunks(requestInfoEventArgs);
                 }
-                
+
                 // Move file on success.
                 if (success)
 		            MoveFile(requestInfoEventArgs.FullPath);

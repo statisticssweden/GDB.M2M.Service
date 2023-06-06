@@ -18,6 +18,10 @@
         public string FileUploadResource { get; set; } =
             @"file/{organisationNumber}/{statisticalProgram}/{referencePeriod}/{fileFormat}/{fileName}/{version}";
 
+
+        public string FileUploadResource_v2_Chunk { get; set; } =
+            @"file/{segment}/{organisationNumber}/{statisticalProgram}/{referencePeriod}/{fileFormat}/{fileName}/{version}";
+
         /// <summary>
         /// The resource-path for heartbeat. The part after the domain.
         /// </summary>
