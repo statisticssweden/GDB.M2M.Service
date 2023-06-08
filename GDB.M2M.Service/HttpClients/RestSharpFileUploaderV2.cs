@@ -156,7 +156,7 @@ namespace GDB.M2M.Service.HttpClients
             _logger.LogDebug($"RestSharpFileUploaderV2 Chunk: {chunk}");
             var request = new RestRequest
             {
-                Resource = _config.FileUploadResource_v2_Chunk,
+                Resource = _config.FileUploadResourceV2,
                 Method = Method.POST
             };
             request.AddUrlSegment("segment", chunk);

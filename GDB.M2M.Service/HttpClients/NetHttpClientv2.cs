@@ -40,7 +40,7 @@ namespace GDB.M2M.Service.HttpClients
 
         private Uri GetResourceUri(RequestInfoEventArgs requestInfo, int segment)
         {
-            var resource = _config.FileUploadResource_v2_Chunk
+            var resource = _config.FileUploadResourceV2
                 .Replace("{segment}", segment.ToString())
                 .Replace("{organisationNumber}", requestInfo.OrganizationNumber)
                 .Replace("{statisticalProgram}", requestInfo.StatisticalProgram)
@@ -124,7 +124,7 @@ namespace GDB.M2M.Service.HttpClients
 
             // Post with negative chunk segment value to make the delivery happen
             var post = GetResourceUri(requestInfo, segment);
-            _logger.LogInformation($"Will POST transfer of chunks is finished to {client.BaseAddress}{post}");
+            _logger.LogInformation($"Will POST request to {client.BaseAddress}{post}");
 
             var response = await client.PostAsync(post, multiContent);
 
