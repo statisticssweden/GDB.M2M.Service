@@ -64,4 +64,4 @@ Below are the following deprecated APIs and URLs which where used:
 You can chose which enpoint you want to use between the two (containing {file} or not) and {version?} is optimal in both. All the above endpoints work in the same way. 
 
 # Build and Test
-Currently tests are not included in distributed solution.
+Tests are are not included in the distributed solution.
