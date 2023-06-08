@@ -70,9 +70,9 @@ namespace GDB.M2M.Service
                     }
                     else // NetHttpClientV2 replaces NetHttpClient
                     {
-                        services.AddTransient<IM2MHttpClient, NetHttpClientv2>();
+                        services.AddTransient<IM2MHttpClient, NetHttpClientV2>();
 
-                        services.AddHttpClient(nameof(NetHttpClientv2))
+                        services.AddHttpClient(nameof(NetHttpClientV2))
                             .ConfigurePrimaryHttpMessageHandler(provider =>
                                 {
                                     var certificateStore = provider.GetRequiredService<ICertificateStore>();

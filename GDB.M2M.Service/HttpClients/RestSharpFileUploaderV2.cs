@@ -12,7 +12,7 @@ using RestSharp;
 namespace GDB.M2M.Service.HttpClients
 {
     /// <summary>
-    /// A HttpClient using RestSharp. Replaces RestSharpFileUploader.
+    /// A HttpClient using RestSharp. Replaces RestSharpFileUploader. To use with M2M/V2
     /// </summary>
     public class RestSharpFileUploaderV2 : IM2MHttpClient
     {
