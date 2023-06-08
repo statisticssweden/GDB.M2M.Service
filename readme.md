@@ -42,6 +42,8 @@ https://m2m.gdb.scb.se/m2m/v2/
 * __Referenceperiod__ - The referenceperiod (month) the file represent. Not needed when using directory structure.
 
 # APIs Version 2
+Below are the current APIs URLs to use:
+
 * __Test__ https://test.m2m.gdb.scb.se/m2m/v2/
 * __Production__ https://m2m.gdb.scb.se/m2m/v2/
 * __EndPoint Test__ https://test.m2m.gdb.scb.se/m2m/v2/file/{segment}/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
@@ -50,7 +52,7 @@ https://m2m.gdb.scb.se/m2m/v2/
 Please note that we currently only support the ContentType: __multipart/form-data__ in the http request.
 
 # APIs Version 1 - Deprecated
-Below are the following deprecated APIs and URLs which are used:
+Below are the following deprecated APIs and URLs which where used:
 
 * __Test__ https://test.m2m.gdb.scb.se/m2m/v1/
 * __Production__ https://m2m.gdb.scb.se/m2m/v1/
