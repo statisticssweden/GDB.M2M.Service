@@ -58,6 +58,7 @@ namespace GDB.M2M.Service.HttpClients
             using (var client = _clientFactory.CreateClient(nameof(NetHttpClientV2)))
             {
                 client.Timeout = new TimeSpan(0, 30, 0);
+
                 var pingResponse = await client.GetAsync(_config.PingResource);
                 if (!pingResponse.IsSuccessStatusCode)
                 {
@@ -78,28 +79,9 @@ namespace GDB.M2M.Service.HttpClients
                     if (chunkSize > MAXCHUNKSIZE) { chunkSize = MAXCHUNKSIZE; }
                     _logger.LogDebug($"Chunk: {chunkSegment}   Chunksize: {chunkSize}");
 
-                    byte[] data = new byte[chunkSize];
-                    stream.Read(data, 0, (int)chunkSize);
+                    var chunkResponse = await PostData(requestInfo, stream, client, chunkSize, chunkSegment);
 
-                    ByteArrayContent bytes = new ByteArrayContent(data);
-
-                    var postTo = GetResourceUri(requestInfo, chunkSegment);
-                    _logger.LogInformation($"Will POST chunk to {client.BaseAddress}{postTo}");
-
-                    var multiContent = new MultipartFormDataContent();
-                    multiContent.Add(bytes, "File", requestInfo.FileName);
-
-                    // TODO: check this out later
-                    //request.Headers.TransferEncodingChunked = true;
-
-                    var response = await client.PostAsync(postTo, multiContent);
-
-                    // TODO: why does this throw an exception?
-                    //var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
-                    //{
-                    // PropertyNameCaseInsensitive = true
-                    //});
-                    if (response.IsSuccessStatusCode)
+                    if (chunkResponse.IsSuccessStatusCode)
                     {
                         _logger.LogInformation($"POST of Chunk {chunkSegment} success");
                     }
@@ -108,30 +90,14 @@ namespace GDB.M2M.Service.HttpClients
                         _logger.LogError($"POST of Chunk {chunkSegment} failed");
                         result = false;
                     }
+
                     chunkSegment++;
                 }
 
                 _logger.LogInformation($"Posted {chunkSegment} chunk segments.");
 
-                byte[] noData = new byte[0];
-                stream.Read(noData, 0, (int)0);
+                var finalResponse = await PostData(requestInfo, stream, client, 0L, DELIVERFILE);
 
-                ByteArrayContent noBytes = new ByteArrayContent(noData);
-
-                var finalMultiContent = new MultipartFormDataContent();
-                finalMultiContent.Add(noBytes, "File", requestInfo.FileName);
-
-                // Post with negative chunk segment value to make the delivery happen
-                var finalPost = GetResourceUri(requestInfo, DELIVERFILE);
-                _logger.LogInformation($"Will POST transfer of chunks is finished to {client.BaseAddress}{finalPost}");
-
-                var finalResponse = await client.PostAsync(finalPost, finalMultiContent);
-
-                // TODO: why does this throw an exception?
-                //var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
-                //{
-                // PropertyNameCaseInsensitive = true
-                //});
                 if (finalResponse.IsSuccessStatusCode)
                 {
                     _logger.LogInformation($"POST of file transfer to delivery is success.");
@@ -144,6 +110,25 @@ namespace GDB.M2M.Service.HttpClients
 
                 return result;
             }
+        }
+
+        private async Task<HttpResponseMessage> PostData(RequestInfoEventArgs requestInfo, Stream stream, HttpClient client, long chunkSize, int segment)
+        {
+            byte[] noData = new byte[chunkSize];
+            stream.Read(noData, 0, (int)0);
+
+            ByteArrayContent noBytes = new ByteArrayContent(noData);
+
+            var multiContent = new MultipartFormDataContent();
+            multiContent.Add(noBytes, "File", requestInfo.FileName);
+
+            // Post with negative chunk segment value to make the delivery happen
+            var post = GetResourceUri(requestInfo, segment);
+            _logger.LogInformation($"Will POST transfer of chunks is finished to {client.BaseAddress}{post}");
+
+            var response = await client.PostAsync(post, multiContent);
+
+            return response;
         }
     }
 }
