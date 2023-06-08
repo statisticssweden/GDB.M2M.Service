@@ -28,17 +28,23 @@ namespace GDB.M2M.Service
                     services.AddTransient<IFileReadyChecker, FileReadyChecker>();
 
                     // You can either use RestSharp or .NET built in HttpClient.
-                    // If you want to use RestSharp
+                    // Default is all false which will use NetHttpClientV2.
                     bool useRestSharp = false;
-                    bool useHttpClientV1 = true;
-                    bool useHttpClientV2 = false;
+                    bool useRestSharpV2 = false;
+                    bool useNetHttpClient = false;
 
-                    if (useRestSharp)
+                    if (useRestSharp) // Deprecated will be removed 2024
                     {
                         services.AddTransient<IM2MHttpClient, RestSharpFileUploader>();
                     }
-                    else if (useHttpClientV1)
+                    else if (useRestSharpV2) // RestSharpV2 Replaces RestSharp
                     {
+                        services.AddTransient<IM2MHttpClient, RestSharpFileUploaderV2>();
+                    }
+                    else if (useNetHttpClient) // Deprecated will be removed 2024
+                    {
+                        services.AddTransient<IM2MHttpClient, NetHttpClient>();
+
                         services.AddHttpClient(nameof(NetHttpClient))
                             .ConfigurePrimaryHttpMessageHandler(provider =>
                                 {
@@ -62,7 +68,7 @@ namespace GDB.M2M.Service
                                 httpClient.BaseAddress = new Uri(options.BaseUrl);
                             });
                     }
-                    else if (useHttpClientV2)
+                    else // NetHttpClientV2 replaces NetHttpClient
                     {
                         services.AddTransient<IM2MHttpClient, NetHttpClientv2>();
 
@@ -89,10 +95,7 @@ namespace GDB.M2M.Service
                                 httpClient.BaseAddress = new Uri(options.BaseUrl);
                             });
                     }
-                    else
-                    {
-                        System.Diagnostics.Trace.WriteLine("CreateHostBuilder: You need to select a client.");
-                    }
+
 
                     services.Configure<M2MConfiguration>(hostContext.Configuration.GetSection("requestConfiguration"));
                     services.AddHostedService<M2MHostService>();

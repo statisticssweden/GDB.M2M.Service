@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using System.Threading.Tasks;
 using GDB.M2M.Service.Configurations;
 using GDB.M2M.Service.Models;
@@ -13,15 +12,18 @@ using RestSharp;
 namespace GDB.M2M.Service.HttpClients
 {
     /// <summary>
-    /// Deprecated will be removed 2024. A HttpClient using RestSharp.
+    /// A HttpClient using RestSharp. Replaces RestSharpFileUploader.
     /// </summary>
-    public class RestSharpFileUploader : IM2MHttpClient
+    public class RestSharpFileUploaderV2 : IM2MHttpClient
     {
+        private const int DELIVERFILE = -1;
+        private const long MAXCHUNKSIZE = 1024 * 400;
+
         private readonly ICertificateStore _certificateStore;
         private readonly M2MConfiguration _config;
-        private readonly ILogger<RestSharpFileUploader> _logger;
+        private readonly ILogger<RestSharpFileUploaderV2> _logger;
 
-        public RestSharpFileUploader(IOptions<M2MConfiguration> config, ICertificateStore certificateStore, ILogger<RestSharpFileUploader> logger)
+        public RestSharpFileUploaderV2(IOptions<M2MConfiguration> config, ICertificateStore certificateStore, ILogger<RestSharpFileUploaderV2> logger)
         {
             _certificateStore = certificateStore;
             _config = config.Value;
@@ -50,29 +52,61 @@ namespace GDB.M2M.Service.HttpClients
 
             var cookies = client.CookieContainer.GetCookies(new Uri(_config.BaseUrl));
 
-            IRestRequest request = CreateFileUploadRequest(requestInfo, stream);
+            var chunkSegment = 0;
+            var totalChunks = (int)Math.Ceiling(stream.Length / (double)MAXCHUNKSIZE);
+            _logger.LogInformation($"Total number of chunks to send: {totalChunks}");
 
+            while (chunkSegment < totalChunks)
+            {
+                var chunkSize = stream.Length - stream.Position;
+                if (chunkSize > MAXCHUNKSIZE) { chunkSize = MAXCHUNKSIZE; }
+                _logger.LogDebug($"Chunk: {chunkSegment}   Chunksize: {chunkSize}");
+
+                IRestRequest request = CreateFileUploadRequest(requestInfo, stream, chunkSegment, chunkSize );
+
+                foreach (Cookie restResponseCookie in cookies)
+                {
+                    request.AddCookie(restResponseCookie.Name, restResponseCookie.Value);
+                }
+
+                var url = client.BuildUri(request);
+                _logger.LogInformation($"Posting file to: {url}");
+
+                var response = await client.ExecutePostAsync<FileUploadResponse>(request);
+
+                if (response.IsSuccessful)
+                {
+                    _logger.LogInformation($"Post of chunk {chunkSegment} success.");
+                }
+                else
+                {
+                    _logger.LogInformation($"Post chunk failed. Response: {response.ErrorMessage}");
+                    return false;
+                }
+                chunkSegment++;
+            }
+            // Final post to make delivery of the chunk uploaded file
+            IRestRequest deliveryRequest = CreateFileUploadRequest(requestInfo, stream, DELIVERFILE, 0L);
             foreach (Cookie restResponseCookie in cookies)
             {
-                request.AddCookie(restResponseCookie.Name, restResponseCookie.Value);
+                deliveryRequest.AddCookie(restResponseCookie.Name, restResponseCookie.Value);
             }
 
-            var url = client.BuildUri(request);
-            _logger.LogInformation($"Posting file to: {url}");
-            var response = await client.ExecutePostAsync<FileUploadResponse>(request);
+            var deliveryUrl = client.BuildUri(deliveryRequest);
+            _logger.LogInformation($"Posting file to: {deliveryUrl}");
+            var deliveryResponse = await client.ExecutePostAsync<FileUploadResponse>(deliveryRequest);
 
-            if (response.StatusCode == HttpStatusCode.OK && response.Data != null)
+            if (deliveryResponse.IsSuccessful)
             {
-                _logger.LogInformation($"File successfully posted. Thank you. The id for your deliveryId is: {response.Data.DeliveryId}.");
-
-                // You might want to return the deliveryId for further processing.
-                // For the moment we simply return true to indicate success.
-                return true;
+                _logger.LogInformation($"Post delivery response data: {deliveryResponse.Data} ");
+            }
+            else
+            {
+                _logger.LogInformation($"Post chunk failed. Response: {deliveryResponse.ErrorMessage}");
+                return false;
             }
 
-            _logger.LogInformation($"Post failed. Response: {response.ErrorMessage}");
-            return false;
-
+            return true; // all is well that ends well.
         }
 
         /// <summary>
@@ -102,26 +136,30 @@ namespace GDB.M2M.Service.HttpClients
                     _logger.LogWarning($"Failed to get a heartbeat from the server. StatusCode: {result.StatusCode}. Message: {result.ErrorMessage}");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error when checking heartbeat.");
             }
         }
-
 
         /// <summary>
         /// Creates a IRestRequest based on a RequestInfoEventArgs
         /// </summary>
         /// <param name="requestInfo"></param>
         /// <param name="stream"></param>
+        /// <param name="segment"></param>
+        /// <param name="chunkSize"></param>
         /// <returns></returns>
-        private IRestRequest CreateFileUploadRequest(RequestInfoEventArgs requestInfo, Stream stream)
+        private IRestRequest CreateFileUploadRequest(RequestInfoEventArgs requestInfo, Stream stream, int segment, long chunkSize)
         {
+            var chunk = segment.ToString();
+            _logger.LogDebug($"RestSharpFileUploaderV2 Chunk: {chunk}");
             var request = new RestRequest
             {
-                Resource = _config.FileUploadResource,
+                Resource = _config.FileUploadResource_v2_Chunk,
                 Method = Method.POST
             };
+            request.AddUrlSegment("segment", chunk);
             request.AddUrlSegment("organisationNumber", requestInfo.OrganizationNumber);
             request.AddUrlSegment("statisticalProgram", requestInfo.StatisticalProgram);
             request.AddUrlSegment("referencePeriod", requestInfo.ReferencePeriod);
@@ -129,8 +167,8 @@ namespace GDB.M2M.Service.HttpClients
             request.AddUrlSegment("fileName", requestInfo.FileName);
             request.AddUrlSegment("version", requestInfo.Version ?? string.Empty);
 
-            byte[] data = new byte[stream.Length];
-            stream.Read(data, 0, (int)stream.Length);
+            byte[] data = new byte[chunkSize];
+            stream.Read(data, 0, (int)chunkSize);
 
             request.AddFileBytes("file", data, requestInfo.FileName, "application/xml");
             return request;
@@ -150,5 +188,6 @@ namespace GDB.M2M.Service.HttpClients
             };
             return client;
         }
+
     }
 }

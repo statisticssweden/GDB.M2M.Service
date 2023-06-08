@@ -11,6 +11,9 @@ using RestSharp;
 
 namespace GDB.M2M.Service.HttpClients
 {
+    /// <summary>
+    /// Deprecated will be removed 2024.
+    /// </summary>
     public class NetHttpClient : IM2MHttpClient
     {
         private readonly IHttpClientFactory _clientFactory;
@@ -81,7 +84,8 @@ namespace GDB.M2M.Service.HttpClients
 
                 if (response.IsSuccessStatusCode)
                 {
-                    _logger.LogInformation($"File successfully posted. Thank you. The id for your deliveryId is: {parsedResponse.DeliveryId}.");
+                    //_logger.LogInformation($"File successfully posted. Thank you. The id for your deliveryId is: {parsedResponse.DeliveryId}.");
+                    _logger.LogInformation("POST success.");
                     return true;
                 }
 
