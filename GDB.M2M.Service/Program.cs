@@ -27,11 +27,6 @@ namespace GDB.M2M.Service
                     services.AddTransient<IRequestInfoGenerator, RequestInfoGenerator>();
                     services.AddTransient<IFileReadyChecker, FileReadyChecker>();
 
-                    // You can either use RestSharp or .NET built in HttpClient.
-                    // If you want to use RestSharp
-                    bool useRestSharp = false;
-
-
                     services.AddTransient<IM2MHttpClient, NetHttpClient>();
 
                     services.AddHttpClient(nameof(NetHttpClient))
