@@ -7,7 +7,6 @@ using GDB.M2M.Service.Configurations;
 using GDB.M2M.Service.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RestSharp;
 
 namespace GDB.M2M.Service.HttpClients
 {
