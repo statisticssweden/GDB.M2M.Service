@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+<<<<<<< HEAD
+=======
+using System.Net.Http.Headers;
+>>>>>>> master
 using System.Text.Json;
 using System.Threading.Tasks;
 using GDB.M2M.Service.Configurations;
@@ -10,9 +14,12 @@ using Microsoft.Extensions.Options;
 
 namespace GDB.M2M.Service.HttpClients
 {
+<<<<<<< HEAD
     /// <summary>
     /// NetHttpClient replaces NetHttpClient
     /// </summary>
+=======
+>>>>>>> master
     public class NetHttpClientV2 : IM2MHttpClient
     {
         private const int DELIVERFILE = -1;
@@ -40,7 +47,11 @@ namespace GDB.M2M.Service.HttpClients
 
         private Uri GetResourceUri(RequestInfoEventArgs requestInfo, int segment)
         {
+<<<<<<< HEAD
             var resource = _config.FileUploadResourceV2
+=======
+            var resource = _config.FileUploadResource_v2_Chunk
+>>>>>>> master
                 .Replace("{segment}", segment.ToString())
                 .Replace("{organisationNumber}", requestInfo.OrganizationNumber)
                 .Replace("{statisticalProgram}", requestInfo.StatisticalProgram)
@@ -58,7 +69,10 @@ namespace GDB.M2M.Service.HttpClients
             using (var client = _clientFactory.CreateClient(nameof(NetHttpClientV2)))
             {
                 client.Timeout = new TimeSpan(0, 30, 0);
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
                 var pingResponse = await client.GetAsync(_config.PingResource);
                 if (!pingResponse.IsSuccessStatusCode)
                 {
@@ -69,6 +83,10 @@ namespace GDB.M2M.Service.HttpClients
                 // Result from heartbeat isn't used but shown for readability. It should be a DateTime.
                 var pingContent = await pingResponse.Content.ReadAsStringAsync();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
                 var totalChunks = (int)Math.Ceiling(stream.Length / (double)MAXCHUNKSIZE);
                 _logger.LogInformation($"Total number of chunks to send: {totalChunks}");
                 bool result = true;
@@ -79,9 +97,34 @@ namespace GDB.M2M.Service.HttpClients
                     if (chunkSize > MAXCHUNKSIZE) { chunkSize = MAXCHUNKSIZE; }
                     _logger.LogDebug($"Chunk: {chunkSegment}   Chunksize: {chunkSize}");
 
+<<<<<<< HEAD
                     var chunkResponse = await PostData(requestInfo, stream, client, chunkSize, chunkSegment);
 
                     if (chunkResponse.IsSuccessStatusCode)
+=======
+                    byte[] data = new byte[chunkSize];
+                    stream.Read(data, 0, (int)chunkSize);
+
+                    ByteArrayContent bytes = new ByteArrayContent(data);
+
+                    var postTo = GetResourceUri(requestInfo, chunkSegment);
+                    _logger.LogInformation($"Will POST chunk to {client.BaseAddress}{postTo}");
+
+                    var multiContent = new MultipartFormDataContent();
+                    multiContent.Add(bytes, "File", requestInfo.FileName);
+
+                    // TODO: check this out later
+                    //request.Headers.TransferEncodingChunked = true;
+
+                    var response = await client.PostAsync(postTo, multiContent);
+
+                    // TODO: why does this throw an exception?
+                    //var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
+                    //{
+                    // PropertyNameCaseInsensitive = true
+                    //});
+                    if (response.IsSuccessStatusCode)
+>>>>>>> master
                     {
                         _logger.LogInformation($"POST of Chunk {chunkSegment} success");
                     }
@@ -90,17 +133,46 @@ namespace GDB.M2M.Service.HttpClients
                         _logger.LogError($"POST of Chunk {chunkSegment} failed");
                         result = false;
                     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
                     chunkSegment++;
                 }
 
                 _logger.LogInformation($"Posted {chunkSegment} chunk segments.");
 
+<<<<<<< HEAD
                 var finalResponse = await PostData(requestInfo, stream, client, 0L, DELIVERFILE);
 
                 if (finalResponse.IsSuccessStatusCode)
                 {
                     _logger.LogInformation($"POST of file transfer to delivery is success.");
+=======
+                byte[] noData = new byte[0];
+                stream.Read(noData, 0, (int)0);
+
+                ByteArrayContent noBytes = new ByteArrayContent(noData);
+
+                var finalMultiContent = new MultipartFormDataContent();
+                finalMultiContent.Add(noBytes, "File", requestInfo.FileName);
+
+                // Post with negative chunk segment value to make the delivery happen
+                var finalPost = GetResourceUri(requestInfo, DELIVERFILE);
+                _logger.LogInformation($"Will POST transfer of chunks is finished to {client.BaseAddress}{finalPost}");
+
+                var finalResponse = await client.PostAsync(finalPost, finalMultiContent);
+
+                // TODO: why does this throw an exception?
+                //var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
+                //{
+                // PropertyNameCaseInsensitive = true
+                //});
+                if (finalResponse.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation($"POST of file transfer to delivery is success.");
+
+>>>>>>> master
                 }
                 else
                 {
@@ -111,6 +183,7 @@ namespace GDB.M2M.Service.HttpClients
                 return result;
             }
         }
+<<<<<<< HEAD
 
         private async Task<HttpResponseMessage> PostData(RequestInfoEventArgs requestInfo, Stream stream, HttpClient client, long chunkSize, int segment)
         {
@@ -130,5 +203,7 @@ namespace GDB.M2M.Service.HttpClients
 
             return response;
         }
+=======
+>>>>>>> master
     }
 }

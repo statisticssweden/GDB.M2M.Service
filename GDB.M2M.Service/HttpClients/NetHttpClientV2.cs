@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GDB.M2M.Service.Configurations;
@@ -69,6 +70,7 @@ namespace GDB.M2M.Service.HttpClients
                 // Result from heartbeat isn't used but shown for readability. It should be a DateTime.
                 var pingContent = await pingResponse.Content.ReadAsStringAsync();
 
+
                 var totalChunks = (int)Math.Ceiling(stream.Length / (double)MAXCHUNKSIZE);
                 _logger.LogInformation($"Total number of chunks to send: {totalChunks}");
                 bool result = true;
@@ -101,6 +103,7 @@ namespace GDB.M2M.Service.HttpClients
                 if (finalResponse.IsSuccessStatusCode)
                 {
                     _logger.LogInformation($"POST of file transfer to delivery is success.");
+
                 }
                 else
                 {

@@ -7,7 +7,6 @@ using GDB.M2M.Service.Configurations;
 using GDB.M2M.Service.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RestSharp;
 
 namespace GDB.M2M.Service.HttpClients
 {
@@ -74,22 +73,22 @@ namespace GDB.M2M.Service.HttpClients
                 var multiContent = new MultipartFormDataContent();                
                 multiContent.Add(bytes, "File", requestInfo.FileName);
 
-               
-
                 var response = await client.PostAsync(resource, multiContent);
-                var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+
+                // TODO: why am I getting an exception
+                //var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
+                //{
+                // PropertyNameCaseInsensitive = true
+                //});
 
                 if (response.IsSuccessStatusCode)
                 {
                     //_logger.LogInformation($"File successfully posted. Thank you. The id for your deliveryId is: {parsedResponse.DeliveryId}.");
-                    _logger.LogInformation("POST success.");
+                    _logger.LogError("POST success.");
                     return true;
                 }
 
-                _logger.LogError("POST failed.");
+                _logger.LogError("POST fail.");
                 return false;
             }
         }

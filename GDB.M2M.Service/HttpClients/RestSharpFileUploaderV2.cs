@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 using GDB.M2M.Service.Configurations;
 using GDB.M2M.Service.Models;
@@ -11,10 +12,15 @@ using RestSharp;
 
 namespace GDB.M2M.Service.HttpClients
 {
+<<<<<<<< HEAD:GDB.M2M.Service/HttpClients/RestSharpFileUploader.cs
     /// <summary>
-    /// A HttpClient using RestSharp. Replaces RestSharpFileUploader. To use with M2M/V2
+    /// Deprecated will be removed 2024. A HttpClient using RestSharp.
     /// </summary>
+    public class RestSharpFileUploader : IM2MHttpClient
+========
+    // TODO: Update to use m2m/v2 api.
     public class RestSharpFileUploaderV2 : IM2MHttpClient
+>>>>>>>> master:GDB.M2M.Service/HttpClients/RestSharpFileUploaderV2.cs
     {
         private const int DELIVERFILE = -1;
         private const long MAXCHUNKSIZE = 1024 * 400;

@@ -27,7 +27,7 @@ namespace GDB.M2M.Service
             _fileUploader = fileUploader;
             _logger = logger;
 
-            // We create a timer which will check for a hearbeat (ping) from server at a given interval.
+            // We create a timer which will check for a heartbeat (ping) from server at a given interval.
             _timer = new System.Timers.Timer(_requestConfiguration.PingInterval);
         }
 
@@ -59,7 +59,7 @@ namespace GDB.M2M.Service
 
 			        success = await _fileUploader.PostFileAsync(requestInfoEventArgs, stream);
                 }
-                
+
                 // Move file on success.
                 if (success)
 		            MoveFile(requestInfoEventArgs.FullPath);
