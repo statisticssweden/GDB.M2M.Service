@@ -2,6 +2,8 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection.PortableExecutable;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GDB.M2M.Service.Configurations;
@@ -17,6 +19,7 @@ namespace GDB.M2M.Service.HttpClients
     public class NetHttpClientV2 : IM2MHttpClient
     {
         private const int DELIVERFILE = -1;
+        private const long FINALRESPONSESIZE = 0;
         private const long MAXCHUNKSIZE = 1024 * 400;
 
         private readonly IHttpClientFactory _clientFactory;
@@ -98,7 +101,7 @@ namespace GDB.M2M.Service.HttpClients
 
                 _logger.LogInformation($"Posted {chunkSegment} chunk segments.");
 
-                var finalResponse = await PostData(requestInfo, stream, client, 0L, DELIVERFILE);
+                var finalResponse = await PostData(requestInfo, stream, client, FINALRESPONSESIZE, DELIVERFILE);
 
                 if (finalResponse.IsSuccessStatusCode)
                 {
@@ -118,7 +121,7 @@ namespace GDB.M2M.Service.HttpClients
         private async Task<HttpResponseMessage> PostData(RequestInfoEventArgs requestInfo, Stream stream, HttpClient client, long chunkSize, int segment)
         {
             byte[] noData = new byte[chunkSize];
-            stream.Read(noData, 0, (int)0);
+            stream.Read(noData, 0, (int)chunkSize);
 
             ByteArrayContent noBytes = new ByteArrayContent(noData);
 
