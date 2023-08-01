@@ -18,10 +18,6 @@
         public string FileUploadResource { get; set; } =
             @"file/{organisationNumber}/{statisticalProgram}/{referencePeriod}/{fileFormat}/{fileName}/{version}";
 
-
-        public string FileUploadResource_v2_Chunk { get; set; } =
-            @"file/{segment}/{organisationNumber}/{statisticalProgram}/{referencePeriod}/{fileFormat}/{fileName}/{version}";
-
         /// <summary>
         /// The resource path for uploading file in chunks. The part after the domain. Use string interpolation.
         /// </summary>

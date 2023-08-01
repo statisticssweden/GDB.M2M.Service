@@ -27,21 +27,10 @@ namespace GDB.M2M.Service
                     services.AddTransient<IRequestInfoGenerator, RequestInfoGenerator>();
                     services.AddTransient<IFileReadyChecker, FileReadyChecker>();
 
-                    // You can either use RestSharp or .NET built in HttpClient.
-                    // Default is all false which will use NetHttpClientV2.
-                    bool useRestSharp = false;
-                    bool useRestSharpV2 = false;
+                    // Default is false which will use NetHttpClientV2.
                     bool useNetHttpClient = false;
 
-                    if (useRestSharp) // Deprecated will be removed 2024
-                    {
-                        services.AddTransient<IM2MHttpClient, RestSharpFileUploader>();
-                    }
-                    else if (useRestSharpV2) // RestSharpV2 Replaces RestSharp
-                    {
-                        services.AddTransient<IM2MHttpClient, RestSharpFileUploaderV2>();
-                    }
-                    else if (useNetHttpClient) // Deprecated will be removed 2024
+                    if (useNetHttpClient) // Deprecated will be removed 2024
                     {
                         services.AddTransient<IM2MHttpClient, NetHttpClient>();
 
