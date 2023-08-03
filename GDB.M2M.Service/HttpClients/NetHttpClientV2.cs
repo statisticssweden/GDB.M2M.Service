@@ -46,8 +46,7 @@ namespace GDB.M2M.Service.HttpClients
                 .Replace("{referencePeriod}", requestInfo.ReferencePeriod)
                 .Replace("{fileFormat}", requestInfo.FileFormat)
                 .Replace("{fileName}", requestInfo.FileName)
-                .Replace("{version}", requestInfo.Version ?? "3");
-                //.Replace("{version}", requestInfo.Version ?? string.Empty);
+                .Replace("{version}", requestInfo.Version ?? string.Empty);
             _logger.LogDebug($"using resource: {resource} ");
             return new Uri(resource, UriKind.Relative);
         }
