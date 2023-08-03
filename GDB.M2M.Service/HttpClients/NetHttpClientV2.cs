@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using GDB.M2M.Service.Configurations;
+using GDB.M2M.Service.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -97,8 +99,15 @@ namespace GDB.M2M.Service.HttpClients
 
                 var finalResponse = await PostData(requestInfo, stream, client, FINALRESPONSESIZE, DELIVERFILE);
 
+                var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await finalResponse.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+
                 if (finalResponse.IsSuccessStatusCode)
                 {
+                    _logger.LogInformation($"File successfully posted. Thank you. Your deliveryId is: {parsedResponse.DeliveryId}.");
                     _logger.LogInformation($"POST of file transfer to delivery is success.");
                 }
                 else
