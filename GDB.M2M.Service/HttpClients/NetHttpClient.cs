@@ -75,7 +75,7 @@ namespace GDB.M2M.Service.HttpClients
 
                 var response = await client.PostAsync(resource, multiContent);
 
-                // TODO: why am I getting an exception
+                // WHY Throws an exception - commented it away including the logger.LogError below
                 //var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
                 //{
                 // PropertyNameCaseInsensitive = true
@@ -84,7 +84,7 @@ namespace GDB.M2M.Service.HttpClients
                 if (response.IsSuccessStatusCode)
                 {
                     //_logger.LogInformation($"File successfully posted. Thank you. The id for your deliveryId is: {parsedResponse.DeliveryId}.");
-                    _logger.LogError("POST success.");
+                    _logger.LogInformation("POST success.");
                     return true;
                 }
 

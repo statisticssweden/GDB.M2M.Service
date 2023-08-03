@@ -1,13 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using GDB.M2M.Service.Configurations;
-using GDB.M2M.Service.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -51,7 +46,8 @@ namespace GDB.M2M.Service.HttpClients
                 .Replace("{referencePeriod}", requestInfo.ReferencePeriod)
                 .Replace("{fileFormat}", requestInfo.FileFormat)
                 .Replace("{fileName}", requestInfo.FileName)
-                .Replace("{version}", requestInfo.Version ?? string.Empty);
+                .Replace("{version}", requestInfo.Version ?? "3");
+                //.Replace("{version}", requestInfo.Version ?? string.Empty);
             _logger.LogDebug($"using resource: {resource} ");
             return new Uri(resource, UriKind.Relative);
         }
@@ -72,7 +68,6 @@ namespace GDB.M2M.Service.HttpClients
 
                 // Result from heartbeat isn't used but shown for readability. It should be a DateTime.
                 var pingContent = await pingResponse.Content.ReadAsStringAsync();
-
 
                 var totalChunks = (int)Math.Ceiling(stream.Length / (double)MAXCHUNKSIZE);
                 _logger.LogInformation($"Total number of chunks to send: {totalChunks}");
@@ -106,7 +101,6 @@ namespace GDB.M2M.Service.HttpClients
                 if (finalResponse.IsSuccessStatusCode)
                 {
                     _logger.LogInformation($"POST of file transfer to delivery is success.");
-
                 }
                 else
                 {

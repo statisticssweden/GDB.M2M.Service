@@ -29,6 +29,7 @@ namespace GDB.M2M.Service
 
                     // Default is false which will use NetHttpClientV2.
                     bool useNetHttpClient = false;
+                    //bool useNetHttpClient = true;
 
                     if (useNetHttpClient) // Deprecated will be removed 2024
                     {

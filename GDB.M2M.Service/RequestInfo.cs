@@ -10,15 +10,4 @@
         public string FileName { get; set; }
         public string ReferencePeriod { get; set; }
     }
-    public class RequestInfoEventArgsV2
-    {
-        public string Segment { get; set; }
-        public string OrganizationNumber { get; set; }
-        public string StatisticalProgram { get; set; }
-        public string FileFormat { get; set; }
-        public string Version { get; set; }
-        public string FullPath { get; set; }
-        public string FileName { get; set; }
-        public string ReferencePeriod { get; set; }
-    }
 }
