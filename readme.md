@@ -23,8 +23,6 @@ In reality it could translate to this: `C:\Temp\999000-0045\2022-06-30\V40`
 
 When running the application and you put a file in the directory above it will send the file as `999000-0045` and define the fileformat as `V40`. If you put the file in `C:\Temp` it will use the values in app.config instead.
 
-
-
 # Configuration
 All necessary configurations should be applied to `app.config`, mainly the `requestConfiguration`-section. The different parameters is described below:
 
@@ -32,8 +30,8 @@ All necessary configurations should be applied to `app.config`, mainly the `requ
 * __DoneDirectory__ - Sent files will be placed here after a successful post
 * __CertificateSerialNumber__ - Serial number for the installed certificate. Note that the application will try to fetch the certificate as the user running the application. Currently as `new X509Store(StoreName.My, StoreLocation.CurrentUser)`. It's convenient when testing, but probably not suitable for production.
 * __BaseUrl__ - Url for GDB M2M-api. Probably one of these:
- https://test.m2m.gdb.scb.se/m2m/v1
-https://m2m.gdb.scb.se/m2m/v1
+ https://test.m2m.gdb.scb.se/m2m/v2/
+https://m2m.gdb.scb.se/m2m/v2/
 * __PingInterval__ - Used when you want to ping the api on a regular basis. Convenient when testing, but probably not suitable for production.
 * __OrganisationNumber__ - Swedish Organisationnummer for the reportee. Eg. 9990000045. Not needed when using directory structure.
 * __StatisticalProgram__ - Statististical program (Sv. undersökning). Either _VINN_ or _KRITA_. Not needed when using directory structure.
@@ -41,19 +39,35 @@ https://m2m.gdb.scb.se/m2m/v1
 * __Version__ - Version of the form. Eg 1, 3, 5. Usually not needed at all, but the API supports it.
 * __Referenceperiod__ - The referenceperiod (month) the file represent. Not needed when using directory structure.
 
-# APIs
-Below are the following APIs and URLs which are used:
+# APIs Version 2
+Below are the current APIs URLs to use, currently only available in Test:
 
-* __Test__ https://test.m2m.gdb.scb.se/m2m/v1
-* __Production__ https://m2m.gdb.scb.se/m2m/v1
+## Test
+* __BaseURL__ https://test.m2m.gdb.scb.se/m2m/v2/
+* __Upload File Endpoint__ https://test.m2m.gdb.scb.se/m2m/v2/file/{segment}/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
+* __Current Status of a file__ https://test.m2m.gdb.scb.se/m2m/v2/history/{deliveryId} - Here DeliveryId is what is returned when uploading a file.
+* __Heartbeat__ https://test.m2m.gdb.scb.se/m2m/v2/heartbeat
+
+## Production
+* __BaseURL__ https://m2m.gdb.scb.se/m2m/v2/
+* __Upload File Endpoint__ https://m2m.gdb.scb.se/m2m/v2/file/{segment}/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
+* __Current Status of a file__ https://m2m.gdb.scb.se/m2m/v2/history/{deliveryId} - Here DeliveryId is what is returned when uploading a file.
+* __Heartbeat__ https://m2m.gdb.scb.se/m2m/v2/heartbeat
+
+Please note that we currently only support the ContentType: __multipart/form-data__ in the http request and that {version?} is optional. 
+
+# APIs Version 1 - Deprecated
+Below are the following deprecated APIs and URLs which where used, and will still be used in Production until May 2024:
+
+* __Test__ https://test.m2m.gdb.scb.se/m2m/v1/
+* __Production__ https://m2m.gdb.scb.se/m2m/v1/
 * __EndPoint Test__ https://test.m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
 					https://test.m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
-* __EndPoint Production__ https://m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{fileFormat}/{version?} 
-						https://m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{fileFormat}/{version?} 
-
-You can chose which enpoint you want to use between the two (containing {file} or not) and {version?} is optimal in both. All the above endpoints work in the same way. 
-
-Please note that we currently only support the ContentType: __multipart/form-data__ in the http request.
+* __EndPoint Production__ https://m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
+						https://m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
+* __Current Status of a file Test__ https://test.m2m.gdb.scb.se/m2m/v2/history/{deliveryId}
+* __Current Status of a file Production__ https://m2m.gdb.scb.se/m2m/v2/history/{deliveryId}
+You can chose which enpoint you want to use between the two (containing {file} or not) and {version?} is optional in both. All the above endpoints work in the same way. 
 
 # Build and Test
-Currently tests are not included in distributed solution.
+Tests are are not included in the distributed solution.

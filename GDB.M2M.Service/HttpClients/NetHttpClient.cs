@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web;
 using GDB.M2M.Service.Configurations;
 using GDB.M2M.Service.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RestSharp;
 
 namespace GDB.M2M.Service.HttpClients
 {
+    /// <summary>
+    /// Deprecated will be removed 2024.
+    /// </summary>
     public class NetHttpClient : IM2MHttpClient
     {
         private readonly IHttpClientFactory _clientFactory;
@@ -76,21 +73,22 @@ namespace GDB.M2M.Service.HttpClients
                 var multiContent = new MultipartFormDataContent();                
                 multiContent.Add(bytes, "File", requestInfo.FileName);
 
-               
-
                 var response = await client.PostAsync(resource, multiContent);
+
+                // WHY Throws an exception - commented it away including the logger.LogError below
                 var parsedResponse = await JsonSerializer.DeserializeAsync<FileUploadResponse>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions()
                 {
-                    PropertyNameCaseInsensitive = true
+                 PropertyNameCaseInsensitive = true
                 });
 
                 if (response.IsSuccessStatusCode)
                 {
-                    _logger.LogInformation($"File successfully posted. Thank you. The id for your deliveryId is: {parsedResponse.DeliveryId}.");
+                    _logger.LogInformation($"File successfully posted. Thank you. Your deliveryId is: {parsedResponse.DeliveryId}.");
+                    _logger.LogInformation("POST success.");
                     return true;
                 }
 
-                _logger.LogError("POST failed.");
+                _logger.LogError("POST fail.");
                 return false;
             }
         }
