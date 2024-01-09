@@ -57,7 +57,7 @@ Below are the current APIs URLs to use, currently only available in Test:
 Please note that we currently only support the ContentType: __multipart/form-data__ in the http request and that {version?} is optional. 
 
 # APIs Version 1 - Deprecated
-Below are the following deprecated APIs and URLs which where used, and will still be used in Production until May:
+Below are the following deprecated APIs and URLs which where used, and will still be used in Production until May 2024:
 
 * __Test__ https://test.m2m.gdb.scb.se/m2m/v1/
 * __Production__ https://m2m.gdb.scb.se/m2m/v1/
