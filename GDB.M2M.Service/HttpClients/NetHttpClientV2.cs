@@ -17,7 +17,7 @@ namespace GDB.M2M.Service.HttpClients
     {
         private const int DELIVERFILE = -1;
         private const long FINALRESPONSESIZE = 0;
-        private const long MAXCHUNKSIZE = 1024 * 400;
+        private const long MAXCHUNKSIZE = 1024 * 9000;
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger<NetHttpClientV2> _logger;

@@ -44,20 +44,22 @@ Below are the current APIs URLs to use, currently only available in Test:
 
 ## Test
 * __BaseURL__ https://test.m2m.gdb.scb.se/m2m/v2/
-* __Upload File Endpoint__ https://test.m2m.gdb.scb.se/m2m/v2/file/{segment}/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
+* __Upload File Endpoint__ https://test.m2m.gdb.scb.se/m2m/v2/file/{segment}/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
+ - Note that the largest allowed fragment size is 1024*9000 bytes
 * __Current Status of a file__ https://test.m2m.gdb.scb.se/m2m/v2/history/{deliveryId} - Here DeliveryId is what is returned when uploading a file.
 * __Heartbeat__ https://test.m2m.gdb.scb.se/m2m/v2/heartbeat
 
 ## Production
 * __BaseURL__ https://m2m.gdb.scb.se/m2m/v2/
 * __Upload File Endpoint__ https://m2m.gdb.scb.se/m2m/v2/file/{segment}/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
+ - Note that the largest allowed fragment size is 1024*9000 bytes
 * __Current Status of a file__ https://m2m.gdb.scb.se/m2m/v2/history/{deliveryId} - Here DeliveryId is what is returned when uploading a file.
 * __Heartbeat__ https://m2m.gdb.scb.se/m2m/v2/heartbeat
 
 Please note that we currently only support the ContentType: __multipart/form-data__ in the http request and that {version?} is optional. 
 
 # APIs Version 1 - Deprecated
-Below are the following deprecated APIs and URLs which where used, and will still be used in Production until May 2024:
+Below are the following deprecated APIs and URLs which were used, and will still be used in Production until May 2024:
 
 * __Test__ https://test.m2m.gdb.scb.se/m2m/v1/
 * __Production__ https://m2m.gdb.scb.se/m2m/v1/
