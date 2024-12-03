@@ -40,7 +40,7 @@ https://m2m.gdb.scb.se/m2m/v2/
 * __Referenceperiod__ - The referenceperiod (month) the file represent. Not needed when using directory structure.
 
 # APIs Version 2
-Below are the current APIs URLs to use, currently only available in Test:
+Below are the current APIs URLs to use:
 
 ## Test
 * __BaseURL__ https://test.m2m.gdb.scb.se/m2m/v2/
@@ -58,18 +58,14 @@ Below are the current APIs URLs to use, currently only available in Test:
 
 Please note that we currently only support the ContentType: __multipart/form-data__ in the http request and that {version?} is optional. 
 
-# APIs Version 1 - Deprecated
-Below are the following deprecated APIs and URLs which were used, and will still be used in Production until May 2024:
+# APIs Version 1 - Removed
+If any APIs aside from version 2 is used, note that as of 2024-11-28 they no longer work and should be switched to V2.
 
-* __Test__ https://test.m2m.gdb.scb.se/m2m/v1/
-* __Production__ https://m2m.gdb.scb.se/m2m/v1/
-* __EndPoint Test__ https://test.m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?}
-					https://test.m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
-* __EndPoint Production__ https://m2m.gdb.scb.se/m2m/v1/file/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
-						https://m2m.gdb.scb.se/m2m/v1/{organisationNumber}/{statisticalProgram}/{referenceperiod}/{fileFormat}/{fileName}/{version?} 
-* __Current Status of a file Test__ https://test.m2m.gdb.scb.se/m2m/v2/history/{deliveryId}
-* __Current Status of a file Production__ https://m2m.gdb.scb.se/m2m/v2/history/{deliveryId}
-You can chose which enpoint you want to use between the two (containing {file} or not) and {version?} is optional in both. All the above endpoints work in the same way. 
+# Notes ragarding the fileupload
+When uploading a file , the file is split into fragments and sent to the API. The API will then merge the fragments and save the file. The largest allowed fragment size is 1024*9000 bytes. 
+Moreover, in order for the system to know when a new file is beion sent or if the file is complete, the first fragment should have index 0 and the last fragment must be sent with index = -1. 
+This example solution implements both the chunking and naming the first and last fragments, so you don't have to worry about it.
+However if you want to create your own solution, you should make sure that these requirements are met.
 
 # Build and Test
 Tests are are not included in the distributed solution.
