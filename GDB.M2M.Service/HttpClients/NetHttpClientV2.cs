@@ -108,11 +108,11 @@ namespace GDB.M2M.Service.HttpClients
                 if (finalResponse.IsSuccessStatusCode)
                 {
                     _logger.LogInformation($"File successfully posted. Thank you. Your deliveryId is: {parsedResponse.DeliveryId}.");
-                    _logger.LogInformation($"POST of file transfer to delivery is success.");
+                    _logger.LogInformation("POST of file transfer to delivery is success.");
                 }
                 else
                 {
-                    _logger.LogError($"POST of file transfer to delivery failed");
+                    _logger.LogError("POST of file transfer to delivery failed");
                     result = false;
                 }
 

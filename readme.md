@@ -64,7 +64,7 @@ If any APIs aside from version 2 is used, note that as of 2024-11-28 they no lon
 # Notes regarding the fileupload
 When uploading a file , the file is split into fragments and sent to the API. The API will then merge the fragments and save the file. The largest allowed fragment size is 1024*9000 bytes. 
 Moreover, in order for the system to know when a new file is being sent or if the file is complete, the first fragment should have index 0 and the last fragment must be sent with index = -1. 
-This example solution implements both the chunking and naming the first and last fragments, so you don't have to worry about it.
+This example solution implements both the chunking and the naming of the first and last fragments, so you don't have to worry about it.
 However if you want to create your own solution, you should make sure that these requirements are met.
 
 # Build and Test
